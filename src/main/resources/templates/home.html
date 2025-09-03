@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="~{fragments/resources :: headResources}"></div>
+    <title>La Mia Libreria - Home</title>
+  </head>
+  <body>
+    <header class="shadow-lg bg-light">
+      <div th:replace="~{fragments/navbar :: navbar}"></div>
+    </header>
+    <main
+      class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-dark"
+    >
+      <section class="bg-light text-center p-5 rounded shadow-sm mb-4">
+        <h2 class="display-5 fw-bold text-blue-dark">
+          Benvenuto in La Mia Libreria
+        </h2>
+        <p class="fst-italic text-muted mt-3">
+          "Chi non legge avrà vissuto una sola vita. Chi legge ne avrà vissute
+          mille." – Umberto Eco
+        </p>
+        <a th:href="@{/books}" class="btn btn-dark mt-4"> Esplora i libri </a>
+      </section>
+    </main>
+    <div th:replace="~{fragments/resources :: scriptsResources}"></div>
+  </body>
+</html>

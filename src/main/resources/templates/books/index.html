@@ -1,0 +1,151 @@
+<html xmlns="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="~{fragments/resources :: headResources}"></div>
+    <title>Libreria</title>
+  </head>
+  <body>
+    <header>
+      <div th:replace="~{fragments/navbar :: navbar}"></div>
+    </header>
+    <main class="container">
+      <div class="d-flex align-items-center justify-content-between">
+        <h1 class="my-4">Elenco dei Libri</h1>
+
+        <button
+          th:onclick="'location.href=\'/books/create\''"
+          class="btn btn-success"
+          sec:authorize="hasAuthority('ADMIN')"
+        >
+          Crea un nuovo Libro
+        </button>
+      </div>
+      <div>
+        <form
+          th:action="@{/books/search}"
+          method="get"
+          class="d-flex align-items-center my-4"
+        >
+          <input
+            type="text"
+            name="query"
+            th:value="${query}"
+            class="form-control w-25 me-2"
+            placeholder="Cerca...."
+          />
+          <button type="submit" class="btn btn-primary">Cerca</button>
+        </form>
+      </div>
+      <table class="table" th:if="${books.size() > 0}">
+        <thead class="text-uppercase align-middle">
+          <tr>
+            <th>ID</th>
+            <th>Titolo</th>
+            <th class="d-none d-lg-table-cell">Titolo Originale</th>
+            <th class="d-none d-md-table-cell">Autore</th>
+            <th class="d-none d-md-table-cell">Genere</th>
+            <th class="d-none d-lg-table-cell">Editore</th>
+            <th class="d-none d-xl-table-cell">Pubblicazione</th>
+            <th class="d-none d-sm-table-cell">Prezzo</th>
+            <th sec:authorize="hasAuthority('ADMIN')"></th>
+            <th></th>
+            <th sec:authorize="hasAuthority('ADMIN')"></th>
+          </tr>
+        </thead>
+        <tbody class="align-middle">
+          <tr
+            th:each="book : ${books}"
+            th:object="${book}"
+            class="align-middle"
+          >
+            <td th:text="*{id}"></td>
+            <td th:text="*{title}"></td>
+            <td
+              th:text="*{originalTitle} ?: '-'"
+              class="d-none d-lg-table-cell"
+            ></td>
+            <td th:text="*{author}" class="d-none d-md-table-cell"></td>
+            <td th:text="*{genre.name}" class="d-none d-md-table-cell"></td>
+            <td th:text="*{editor}" class="d-none d-lg-table-cell"></td>
+            <td
+              th:text="*{publicationYear}"
+              class="d-none d-xl-table-cell"
+            ></td>
+            <td th:text="*{price} + ' €'" class="d-none d-sm-table-cell"></td>
+            <td sec:authorize="hasAuthority('ADMIN')">
+              <a
+                th:href="@{/books/edit/{id}(id=${book.id})}"
+                class="btn btn-warning btn-sm"
+                >Modifica</a
+              >
+            </td>
+            <td>
+              <a
+                th:href="@{/books/{id}(id=${book.id})}"
+                class="btn btn-info btn-sm"
+                >Dettagli</a
+              >
+            </td>
+            <td sec:authorize="hasAuthority('ADMIN')">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm"
+                data-bs-toggle="modal"
+                th:data-bs-target="'#deleteModal' + ${book.id}"
+              >
+                Elimina
+              </button>
+              <!-- Modale Bootstrap -->
+              <div
+                class="modal fade"
+                th:id="'deleteModal' + ${book.id}"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteModalLabel">
+                        Conferma Eliminazione
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      Sei sicuro di voler eliminare questo libro:
+                      <strong th:text="${book.title}"></strong>?
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Chiudi
+                      </button>
+                      <form
+                        th:action="@{/books/delete/{id}(id=${book.id})}"
+                        method="post"
+                      >
+                        <button type="submit" class="btn btn-danger">
+                          Elimina
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p th:unless="${books.size() > 0}">Non ci sono libri disponibili.</p>
+    </main>
+    <div th:replace="~{fragments/resources :: scriptsResources}"></div>
+  </body>
+</html>

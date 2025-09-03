@@ -1,0 +1,97 @@
+<html xmlns="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="~{fragments/resources :: headResources}"></div>
+    <title th:if="${edit}">Modifica Genere</title>
+    <title th:unless="${edit}">Nuovo Genere</title>
+  </head>
+  <body>
+    <header>
+      <div th:replace="~{fragments/navbar :: navbar}"></div>
+    </header>
+    <main class="container">
+      <h5 class="my-4">
+        <a
+          th:href="@{/genres}"
+          class="link-secondary fst-italic text-decoration-none"
+          >Generi</a
+        ><span class="fst-italic text-secondary">/</span
+        ><a
+          th:if="${edit}"
+          th:href="@{/genres/edit/{id}(id=${genre.id})}"
+          class="fst-italic link-secondary text-decoration-none active fw-bold"
+          >Modifica</a
+        >
+        <a
+          th:unless="${edit}"
+          th:href="@{/genres/create}"
+          class="fst-italic link-secondary text-decoration-none active fw-bold"
+          >Crea</a
+        >
+      </h5>
+      <h1
+        th:if="${edit}"
+        class="my-4"
+        th:text="'Modifica Genere: ' + ${genre.name}"
+      ></h1>
+      <h1 th:unless="${edit}" class="my-4">Crea un Nuovo Genere</h1>
+      <section class="row">
+        <div class="col-12"></div>
+      </section>
+      <form
+        id="genreForm"
+        th:action="${edit} ? @{/genres/edit/{id}(id=${genre.id})} : @{/genres/create}"
+        th:object="${genre}"
+        method="post"
+      >
+        <div class="mb-3">
+          <label for="name" class="form-label">Genere:</label>
+          <input
+            type="text"
+            id="name"
+            th:field="*{name}"
+            class="form-control"
+            th:errorClass="is-invalid"
+          />
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}">
+            <ul>
+              <li
+                th:each="error : ${#fields.errors('name')}"
+                th:text="${error}"
+              ></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- <div class="mb-3">
+          <label for="genre" class="form-label">Genere:</label>
+          <select
+            id="genre"
+            th:field="*{genre.id}"
+            class="form-select"
+            th:errorClass="is-invalid"
+          >
+            <option
+              th:each="g : ${genres}"
+              th:value="${g.id}"
+              th:text="${g.name}"
+            ></option>
+          </select>
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('genre')}">
+            <ul>
+              <li
+                th:each="err : ${#fields.errors('genre')}"
+                th:text="${err}"
+              ></li>
+            </ul>
+          </div>
+        </div> -->
+
+        <div class="mb-3 d-flex justify-content-between">
+          <input type="reset" value="Annulla" class="btn btn-secondary" />
+          <input type="submit" value="Salva" class="btn btn-primary me-2" />
+        </div>
+      </form>
+    </main>
+    <div th:replace="~{fragments/resources :: scriptsResources}"></div>
+  </body>
+</html>
