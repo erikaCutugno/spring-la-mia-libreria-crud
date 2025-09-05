@@ -37,8 +37,13 @@ public class Book {
     private BigDecimal price;
 
     @NotBlank(message = "L'URL dell'immagine non può essere vuota")
-    @Pattern(regexp = "^(|\\w|\\s|-])*\\.(?:jpg|jpeg|png)$",
-             message = "L'URL deve essere un link valido a un'immagine (jpg, jpeg, png)")
+    // @Pattern(regexp = "^(|\\w|\\s|-])*\\.(?:jpg|jpeg|png)$",
+    //          message = "L'URL deve essere un link valido a un'immagine (jpg, jpeg, png)")
+    @Pattern(
+  regexp = "^(https?:\\/\\/)?([\\w\\-]+\\.)+[\\w\\-]+(\\/[^\\s]*)?\\.(jpg|jpeg|png)$|^([\\w\\-/]+)\\.(jpg|jpeg|png)$",
+  message = "Inserisci un URL o percorso valido a un'immagine (jpg, jpeg, png)"
+)
+
     private String image;
 
     @NotBlank(message = "L'autore del libro non può essere vuoto")
